@@ -59,3 +59,6 @@ terraform.rc
 # Goreleaser
 dist/
 snapshot/
+
+# Binary
+/terraform-provider-git

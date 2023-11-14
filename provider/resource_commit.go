@@ -58,8 +58,7 @@ func resourceCommit() *schema.Resource {
 			"add": {
 				Description: "A file to add. Contains a path and the file content.",
 				Type:        schema.TypeList,
-				Required:    true,
-				MinItems:    1,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"path": {
@@ -76,8 +75,7 @@ func resourceCommit() *schema.Resource {
 			"remove": {
 				Description: "A file to remove. Contains the file path.",
 				Type:        schema.TypeList,
-				Required:    false,
-				MinItems:    0,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"path": {

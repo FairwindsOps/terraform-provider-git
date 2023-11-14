@@ -17,12 +17,12 @@ A git commit.
 
 ### Required
 
-- `add` (Block List, Min: 1) A file to add. Contains a path and the file content. (see [below for nested schema](#nestedblock--add))
 - `branch` (String) The git branch to commit to.
 - `url` (String) The URL of the git repository. Must be http, https, or ssh.
 
 ### Optional
 
+- `add` (Block List) A file to add. Contains a path and the file content. (see [below for nested schema](#nestedblock--add))
 - `auth` (Block List, Max: 1) An authentication block for connecting to the git provider. (see [below for nested schema](#nestedblock--auth))
 - `delete_message` (String) The commit message to use on delete.
 - `message` (String) The git commit message.

@@ -199,8 +199,12 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 		}
 
 		d.SetId(sha.String())
-		d.Set("sha", sha.String())
-		d.Set("new", false)
+		if err := d.Set("sha", sha.String()); err != nil {
+			return diag.Errorf("failed to set sha: %s", err)
+		}
+		if err := d.Set("new", false); err != nil {
+			return diag.Errorf("failed to set new: %s", err)
+		}
 
 		return nil
 	}
@@ -239,8 +243,12 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	d.SetId(commitSha.String())
-	d.Set("sha", commitSha.String())
-	d.Set("new", true)
+	if err := d.Set("sha", commitSha.String()); err != nil {
+		return diag.Errorf("error setting sha: %s", err)
+	}
+	if err := d.Set("new", true); err != nil {
+		return diag.Errorf("error setting new: %s", err)
+	}
 
 	return nil
 }
@@ -322,8 +330,12 @@ func resourceCommitRead(ctx context.Context, d *schema.ResourceData, meta interf
 	}
 
 	d.SetId(sha.String())
-	d.Set("sha", sha.String())
-	d.Set("new", false)
+	if err := d.Set("sha", sha.String()); err != nil {
+		return diag.Errorf("failed to set sha: %s", err)
+	}
+	if err := d.Set("new", false); err != nil {
+		return diag.Errorf("failed to set new: %s", err)
+	}
 
 	return nil
 }
@@ -428,8 +440,12 @@ func resourceCommitUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 		}
 
 		d.SetId(sha.String())
-		d.Set("sha", sha.String())
-		d.Set("new", false)
+		if err := d.Set("sha", sha.String()); err != nil {
+			return diag.Errorf("failed to set sha: %s", err)
+		}
+		if err := d.Set("new", false); err != nil {
+			return diag.Errorf("failed to set new: %s", err)
+		}
 
 		return nil
 	}
@@ -467,9 +483,13 @@ func resourceCommitUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 		return diag.Errorf("failed to push: %s", err)
 	}
 
-	d.SetId(commitSha.String())
-	d.Set("sha", commitSha.String())
-	d.Set("new", true)
+	d.SetId(sha.String())
+	if err := d.Set("sha", commitSha.String()); err != nil {
+		return diag.Errorf("failed to set sha: %s", err)
+	}
+	if err := d.Set("new", true); err != nil {
+		return diag.Errorf("failed to set new: %s", err)
+	}
 
 	return nil
 }

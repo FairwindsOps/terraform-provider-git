@@ -106,7 +106,9 @@ func dataFileRead(ctx context.Context, d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return diag.Errorf("failed to read file: %s", err)
 	}
-	d.Set("content", string(content))
+	if err := d.Set("content", string(content)); err != nil {
+		return diag.Errorf("failed to set file content: %s", err)
+	}
 
 	err = file.Close()
 	if err != nil {

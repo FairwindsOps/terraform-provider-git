@@ -99,11 +99,13 @@ func dataRepositoryRead(ctx context.Context, d *schema.ResourceData, meta interf
 	if err != nil {
 		return diag.Errorf("failed to get HEAD: %s", err)
 	}
-	d.Set("head", []map[string]string{
+	if err := d.Set("head", []map[string]string{
 		{
 			"sha": head.String(),
 		},
-	})
+	}); err != nil {
+		return diag.Errorf("failed to set head: %s", err)
+	}
 
 	// Fetch all remote refs
 	remote, err := repo.Remote("origin")
@@ -134,8 +136,12 @@ func dataRepositoryRead(ctx context.Context, d *schema.ResourceData, meta interf
 			})
 		}
 	}
-	d.Set("branches", branchesData)
-	d.Set("tags", tagsData)
+	if err := d.Set("branches", branchesData); err != nil {
+		return diag.Errorf("error setting branches: %s", err)
+	}
+	if err := d.Set("tags", tagsData); err != nil {
+		return diag.Errorf("error setting tags: %s", err)
+	}
 
 	return nil
 }

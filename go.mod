@@ -1,4 +1,4 @@
-module github.com/arl-sh/terraform-provider-git
+module github.com/fairwindsops/terraform-provider-git
 
 go 1.21
 

@@ -3,12 +3,72 @@
 page_title: "git_commit Resource - terraform-provider-git"
 subcategory: ""
 description: |-
-  A git commit.
+  A resource to create a git commit with one or more files or removals.
+  ```hcl
+  resource "gitcommit" "examplewrite" {
+      url            = "https://example.com/repo-name"
+      branch         = "main"
+      message        = "Create txt and JSON files"
+      updatemessage = "Update txt and JSON files"
+      deletemessage = "Delete txt and JSON files"
+  add {
+      path    = "path/to/file.txt"
+      content = "Hello, World!"
+  }
+  
+  add {
+      path    = "path/to/file.json"
+      content = jsonencode({ hello = "world" })
+  }
+  
+  prune = true
+  
+  }
+  output "commitsha" {
+      value = gitcommit.example_write.sha
+  }
+  output "isnew" {
+      value = gitcommit.example_write.new
+  }
+  ```
+  See below for all available fields.
 ---
 
 # git_commit (Resource)
 
-A git commit.
+A resource to create a git commit with one or more files or removals.
+
+```hcl
+resource "git_commit" "example_write" {
+	url            = "https://example.com/repo-name"
+	branch         = "main"
+	message        = "Create txt and JSON files"
+	update_message = "Update txt and JSON files"
+	delete_message = "Delete txt and JSON files"
+	
+	add {
+		path    = "path/to/file.txt"
+		content = "Hello, World!"
+	}
+	
+	add {
+		path    = "path/to/file.json"
+		content = jsonencode({ hello = "world" })
+	}
+	
+	prune = true
+}
+	
+output "commit_sha" {
+	value = git_commit.example_write.sha
+}
+	
+output "is_new" {
+	value = git_commit.example_write.new
+}
+```
+
+See below for all available fields.
 
 
 

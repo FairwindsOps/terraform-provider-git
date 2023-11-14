@@ -12,10 +12,11 @@ import (
 
 func dataRepository() *schema.Resource {
 	return &schema.Resource{
+		Description: "A remote git repository.",
 		ReadContext: dataRepositoryRead,
-
 		Schema: map[string]*schema.Schema{
 			"url": {
+				Description:  "The URL of the git repository. Must be http, https, or ssh.",
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
@@ -24,8 +25,9 @@ func dataRepository() *schema.Resource {
 			"auth": authSchema(),
 
 			"head": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "The head of the git repository.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"sha": {
@@ -36,8 +38,9 @@ func dataRepository() *schema.Resource {
 				},
 			},
 			"branches": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of branches in the remote repository.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -52,8 +55,9 @@ func dataRepository() *schema.Resource {
 				},
 			},
 			"tags": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of tags in the remote repository.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {

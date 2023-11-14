@@ -19,8 +19,8 @@ import (
 
 func dataFile() *schema.Resource {
 	return &schema.Resource{
+		Description: "A file in a remote repository.",
 		ReadContext: dataFileRead,
-
 		Schema: map[string]*schema.Schema{
 			"url": {
 				Type:         schema.TypeString,

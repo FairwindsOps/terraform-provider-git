@@ -19,6 +19,7 @@ import (
 
 func resourceCommit() *schema.Resource {
 	return &schema.Resource{
+		Description:   "A git commit.",
 		CreateContext: resourceCommitCreate,
 		ReadContext:   resourceCommitRead,
 		UpdateContext: resourceCommitUpdate,
@@ -30,29 +31,35 @@ func resourceCommit() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.IsURLWithScheme([]string{"http", "https", "ssh"}),
+				Description:  "The URL of the git repository. Must be http, https, or ssh.",
 			},
 			"branch": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The git branch to commit to.",
 			},
 			"message": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "Committed with Terraform",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "Committed with Terraform",
+				Description: "The git commit message.",
 			},
 			"update_message": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The commit message to use on update.",
 			},
 			"delete_message": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The commit message to use on delete.",
 			},
 			"add": {
-				Type:     schema.TypeList,
-				Required: true,
-				MinItems: 1,
+				Description: "A file to add. Contains a path and the file content.",
+				Type:        schema.TypeList,
+				Required:    true,
+				MinItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"path": {
@@ -67,9 +74,10 @@ func resourceCommit() *schema.Resource {
 				},
 			},
 			"remove": {
-				Type:     schema.TypeList,
-				Required: false,
-				MinItems: 0,
+				Description: "A file to remove. Contains the file path.",
+				Type:        schema.TypeList,
+				Required:    false,
+				MinItems:    0,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"path": {
@@ -87,12 +95,14 @@ func resourceCommit() *schema.Resource {
 			"auth": authSchema(),
 
 			"sha": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The git sha of the commit.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"new": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "A boolean to indicate if the commit is newly created.",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 		},
 	}

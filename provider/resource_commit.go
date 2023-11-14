@@ -19,38 +19,7 @@ import (
 
 func resourceCommit() *schema.Resource {
 	return &schema.Resource{
-		Description: "A resource to create a git commit with one or more files or removals.\n\n" + "```hcl" + `
-resource "git_commit" "example_write" {
-	url            = "https://example.com/repo-name"
-	branch         = "main"
-	message        = "Create txt and JSON files"
-	update_message = "Update txt and JSON files"
-	delete_message = "Delete txt and JSON files"
-	
-	add {
-		path    = "path/to/file.txt"
-		content = "Hello, World!"
-	}
-	
-	add {
-		path    = "path/to/file.json"
-		content = jsonencode({ hello = "world" })
-	}
-	
-	prune = true
-}
-	
-output "commit_sha" {
-	value = git_commit.example_write.sha
-}
-	
-output "is_new" {
-	value = git_commit.example_write.new
-}
-` + "```" + `
-
-See below for all available fields.
-`,
+		Description:   "A resource to create a git commit with one or more files or removals.",
 		CreateContext: resourceCommitCreate,
 		ReadContext:   resourceCommitRead,
 		UpdateContext: resourceCommitUpdate,

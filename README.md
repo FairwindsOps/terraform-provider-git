@@ -1,8 +1,6 @@
-# terraform-provider-git &nbsp; [![Build Status](https://github.com/arl-sh/terraform-provider-git/workflows/release/badge.svg)](https://github.com/arl-sh/terraform-provider-git/actions)
-
 A [Terraform](http://terraform.io) plugin to manage files in any remote Git repository.
 
-Available on the Terraform registry as [arl-sh/git](https://registry.terraform.io/providers/arl-sh/git).
+Available on the Terraform registry as [fairwindsops/git](https://registry.terraform.io/providers/fairwindsops/git).
 
 ## Installation
 
@@ -10,7 +8,7 @@ Available on the Terraform registry as [arl-sh/git](https://registry.terraform.i
 terraform {
   required_providers {
     git = {
-      source  = "arl-sh/git"
+      source  = "fairwindsops/git"
       version = "~> 0.3"
     }
   }

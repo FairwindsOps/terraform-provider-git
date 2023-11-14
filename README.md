@@ -4,65 +4,6 @@ Available on the Terraform registry as [fairwindsops/git](https://registry.terra
 
 [Documentation](https://registry.terraform.io/providers/FairwindsOps/git/latest/docs)
 
-## Installation
-
-```hcl
-terraform {
-  required_providers {
-    git = {
-      source  = "fairwindsops/git"
-      version = "~> 0.3"
-    }
-  }
-}
-```
-
-Then, run `terraform init`.
-
-## Data Sources
-
-### git_repository
-```hcl
-# Read metadata of a Git repository
-data "git_repository" "example_repo" {
-  url = "https://example.com/repo-name"
-}
-
-output "head_sha" {
-  value = data.git_repository.example_repo.head.sha
-}
-
-output "branch_names" {
-  value = data.git_repository.example_repo.branches.*.name
-}
-
-output "branch_shas" {
-  value = data.git_repository.example_repo.branches.*.sha
-}
-
-output "tag_names" {
-  value = data.git_repository.example_repo.tags.*.name
-}
-
-output "tag_shas" {
-  value = data.git_repository.example_repo.tags.*.sha
-}
-```
-
-### git_file
-```hcl
-# Read an existing file in a Git repository
-data "git_file" "example_read" {
-  url  = "https://example.com/repo-name"
-  ref  = "v1.0.0"
-  path = "path/to/file.txt"
-}
-
-output "file_content" {
-  value = data.git_file.example_read.content
-}
-```
-
 ## Authentication
 
 The `auth` block is supported on all data sources and resources.
@@ -137,8 +78,3 @@ resource "git_commit" "example_write" {
   }
 }
 ```
-
-## License
-
-Licensed under the Apache License, Version 2.0.\
-See the included LICENSE file for more details.

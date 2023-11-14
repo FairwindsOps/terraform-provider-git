@@ -66,6 +66,19 @@ func resourceCommit() *schema.Resource {
 					},
 				},
 			},
+			"remove": {
+				Type:     schema.TypeList,
+				Required: false,
+				MinItems: 0,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"path": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+			},
 			"prune": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -89,7 +102,8 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	url := d.Get("url").(string)
 	branch := d.Get("branch").(string)
 	message := d.Get("message").(string)
-	items := d.Get("add").([]interface{})
+	addItems := d.Get("add").([]interface{})
+	removeItems := d.Get("remove").([]interface{})
 
 	// Clone repository
 	auth, err := getAuth(d)
@@ -129,7 +143,7 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	// Write files
-	for _, item := range items {
+	for _, item := range addItems {
 		path := item.(map[string]interface{})["path"].(string)
 		content := item.(map[string]interface{})["content"].(string)
 
@@ -149,6 +163,19 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 		err = file.Close()
 		if err != nil {
 			return diag.Errorf("failed to close file %s: %s", path, err)
+		}
+	}
+
+	// Remove files
+	for _, item := range removeItems {
+		path := item.(map[string]interface{})["path"].(string)
+
+		path = worktree.Filesystem.Join(path)
+
+		// Remove the file
+		_, err := worktree.Remove(path)
+		if err != nil {
+			diag.Errorf("failed to remove file %s: %s", path, err)
 		}
 	}
 

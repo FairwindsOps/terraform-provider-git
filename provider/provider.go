@@ -22,7 +22,7 @@ func Provider() *schema.Provider {
 		Schema: map[string]*schema.Schema{
 			"github_token": {
 				Type:     schema.TypeString,
-				Required: false,
+				Optional: true,
 			},
 		},
 	}
@@ -46,8 +46,13 @@ func configure(p *schema.Provider) func(context.Context, *schema.ResourceData) (
 			token = d.Get("github_token").(string)
 		}
 
-		return &http.TokenAuth{
-			Token: token,
+		if token == "" {
+			return nil, diag.Errorf("empty github token")
+		}
+
+		return &http.BasicAuth{
+			Username: "anyuser",
+			Password: token,
 		}, nil
 	}
 }

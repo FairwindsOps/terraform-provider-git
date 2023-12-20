@@ -11,6 +11,7 @@ import (
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/format/index"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -111,8 +112,7 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	addItems := d.Get("add").([]interface{})
 	removeItems := d.Get("remove").([]interface{})
 
-	client := meta.(*apiClient)
-	auth := client.auth
+	auth := meta.(*http.BasicAuth)
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
@@ -252,8 +252,8 @@ func resourceCommitRead(ctx context.Context, d *schema.ResourceData, meta interf
 	url := d.Get("url").(string)
 	branch := d.Get("branch").(string)
 	items := d.Get("add").([]interface{})
-	client := meta.(*apiClient)
-	auth := client.auth
+
+	auth := meta.(*http.BasicAuth)
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
@@ -342,8 +342,7 @@ func resourceCommitUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 		message = updateMessage.(string)
 	}
 
-	client := meta.(*apiClient)
-	auth := client.auth
+	auth := meta.(*http.BasicAuth)
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
@@ -494,8 +493,7 @@ func resourceCommitDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	} else if updateMessage, ok := d.GetOk("update_message"); ok {
 		message = updateMessage.(string)
 	}
-	client := meta.(*apiClient)
-	auth := client.auth
+	auth := meta.(*http.BasicAuth)
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,

@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -28,13 +27,6 @@ func Provider() *schema.Provider {
 	}
 	p.ConfigureContextFunc = configure(p)
 	return p
-}
-
-type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
-	auth transport.AuthMethod
 }
 
 func configure(p *schema.Provider) func(context.Context, *schema.ResourceData) (any, diag.Diagnostics) {

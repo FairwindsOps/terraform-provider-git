@@ -11,6 +11,7 @@ import (
 	"github.com/go-git/go-billy/v5/memfs"
 	gogit "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -49,11 +50,11 @@ func dataFileRead(ctx context.Context, d *schema.ResourceData, meta interface{})
 	url := d.Get("url").(string)
 	path := d.Get("path").(string)
 
-	client := meta.(*apiClient)
+	auth := meta.(*http.BasicAuth)
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
-		Auth: client.auth,
+		Auth: auth,
 	})
 	if err != nil {
 		return diag.Errorf("failed to clone repository: %s", err)

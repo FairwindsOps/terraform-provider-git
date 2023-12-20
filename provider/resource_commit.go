@@ -90,8 +90,6 @@ func resourceCommit() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
-			"auth": authSchema(),
-
 			"sha": {
 				Description: "The git sha of the commit.",
 				Type:        schema.TypeString,
@@ -113,11 +111,8 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	addItems := d.Get("add").([]interface{})
 	removeItems := d.Get("remove").([]interface{})
 
-	// Clone repository
-	auth, err := getAuth(d)
-	if err != nil {
-		return diag.Errorf("failed to prepare authentication: %s", err)
-	}
+	client := meta.(*apiClient)
+	auth := client.auth
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
@@ -257,12 +252,8 @@ func resourceCommitRead(ctx context.Context, d *schema.ResourceData, meta interf
 	url := d.Get("url").(string)
 	branch := d.Get("branch").(string)
 	items := d.Get("add").([]interface{})
-
-	// Clone repository
-	auth, err := getAuth(d)
-	if err != nil {
-		return diag.Errorf("failed to prepare authentication: %s", err)
-	}
+	client := meta.(*apiClient)
+	auth := client.auth
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
@@ -351,11 +342,8 @@ func resourceCommitUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 		message = updateMessage.(string)
 	}
 
-	// Clone repository
-	auth, err := getAuth(d)
-	if err != nil {
-		return diag.Errorf("failed to prepare authentication: %s", err)
-	}
+	client := meta.(*apiClient)
+	auth := client.auth
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
@@ -506,12 +494,8 @@ func resourceCommitDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	} else if updateMessage, ok := d.GetOk("update_message"); ok {
 		message = updateMessage.(string)
 	}
-
-	// Clone repository
-	auth, err := getAuth(d)
-	if err != nil {
-		return diag.Errorf("failed to prepare authentication: %s", err)
-	}
+	client := meta.(*apiClient)
+	auth := client.auth
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,

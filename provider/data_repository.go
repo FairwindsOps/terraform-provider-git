@@ -22,8 +22,6 @@ func dataRepository() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: validation.IsURLWithScheme([]string{"http", "https", "ssh"}),
 			},
-			"auth": authSchema(),
-
 			"head": {
 				Description: "The head of the git repository.",
 				Type:        schema.TypeList,
@@ -78,11 +76,8 @@ func dataRepository() *schema.Resource {
 func dataRepositoryRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	url := d.Get("url").(string)
 
-	// Clone repository
-	auth, err := getAuth(d)
-	if err != nil {
-		return diag.Errorf("failed to prepare authentication: %s", err)
-	}
+	client := meta.(*apiClient)
+	auth := client.auth
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), nil, &gogit.CloneOptions{
 		URL:  url,

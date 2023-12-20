@@ -32,7 +32,6 @@ func dataFile() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"auth": authSchema(),
 			"path": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -50,15 +49,11 @@ func dataFileRead(ctx context.Context, d *schema.ResourceData, meta interface{})
 	url := d.Get("url").(string)
 	path := d.Get("path").(string)
 
-	// Clone repository
-	auth, err := getAuth(d)
-	if err != nil {
-		return diag.Errorf("failed to prepare authentication: %s", err)
-	}
+	client := meta.(*apiClient)
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), memfs.New(), &gogit.CloneOptions{
 		URL:  url,
-		Auth: auth,
+		Auth: client.auth,
 	})
 	if err != nil {
 		return diag.Errorf("failed to clone repository: %s", err)

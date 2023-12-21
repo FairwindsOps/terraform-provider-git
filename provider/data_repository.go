@@ -4,6 +4,7 @@ import (
 	"context"
 
 	gogit "github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -22,8 +23,6 @@ func dataRepository() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: validation.IsURLWithScheme([]string{"http", "https", "ssh"}),
 			},
-			"auth": authSchema(),
-
 			"head": {
 				Description: "The head of the git repository.",
 				Type:        schema.TypeList,
@@ -78,11 +77,7 @@ func dataRepository() *schema.Resource {
 func dataRepositoryRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	url := d.Get("url").(string)
 
-	// Clone repository
-	auth, err := getAuth(d)
-	if err != nil {
-		return diag.Errorf("failed to prepare authentication: %s", err)
-	}
+	auth := meta.(*http.BasicAuth)
 
 	repo, err := gogit.CloneContext(ctx, memory.NewStorage(), nil, &gogit.CloneOptions{
 		URL:  url,

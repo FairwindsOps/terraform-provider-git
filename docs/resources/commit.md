@@ -53,7 +53,6 @@ output "is_new" {
 ### Optional
 
 - `add` (Block List) A file to add. Contains a path and the file content. (see [below for nested schema](#nestedblock--add))
-- `auth` (Block List, Max: 1) An authentication block for connecting to the git provider. (see [below for nested schema](#nestedblock--auth))
 - `delete_message` (String) The commit message to use on delete.
 - `message` (String) The git commit message.
 - `prune` (Boolean)
@@ -73,48 +72,6 @@ Required:
 
 - `content` (String)
 - `path` (String)
-
-
-<a id="nestedblock--auth"></a>
-### Nested Schema for `auth`
-
-Optional:
-
-- `basic` (Block List, Max: 1) (see [below for nested schema](#nestedblock--auth--basic))
-- `bearer` (Block List, Max: 1) (see [below for nested schema](#nestedblock--auth--bearer))
-- `ssh_key` (Block List, Max: 1) (see [below for nested schema](#nestedblock--auth--ssh_key))
-
-<a id="nestedblock--auth--basic"></a>
-### Nested Schema for `auth.basic`
-
-Required:
-
-- `password` (String)
-
-Optional:
-
-- `username` (String)
-
-
-<a id="nestedblock--auth--bearer"></a>
-### Nested Schema for `auth.bearer`
-
-Required:
-
-- `token` (String)
-
-
-<a id="nestedblock--auth--ssh_key"></a>
-### Nested Schema for `auth.ssh_key`
-
-Optional:
-
-- `known_hosts` (List of String)
-- `password` (String)
-- `private_key_path` (String)
-- `private_key_pem` (String)
-- `username` (String)
-
 
 
 <a id="nestedblock--remove"></a>

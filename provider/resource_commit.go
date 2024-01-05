@@ -85,7 +85,7 @@ func resourceCommit() *schema.Resource {
 						},
 						"recursive": {
 							Type:     schema.TypeBool,
-							Required: false,
+							Optional: true,
 							Default:  false,
 						},
 					},

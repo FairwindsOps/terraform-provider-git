@@ -80,7 +80,3 @@ Required:
 Required:
 
 - `path` (String)
-
-Optional:
-
-- `recursive` (Boolean)

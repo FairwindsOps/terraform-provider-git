@@ -83,11 +83,6 @@ func resourceCommit() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"recursive": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
-						},
 					},
 				},
 			},
@@ -177,23 +172,14 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	// Remove files
 	for _, item := range removeItems {
 		path := item.(map[string]interface{})["path"].(string)
-		recursive := item.(map[string]interface{})["recursive"].(bool)
 
 		path = worktree.Filesystem.Join(path)
 
 		// Remove the file
-		if recursive {
-			err := worktree.RemoveGlob(path)
-			if err != nil {
-				diag.Errorf("failed to remove file recursively %s: %s", path, err)
-			}
-		} else {
-			_, err := worktree.Remove(path)
-			if err != nil {
-				diag.Errorf("failed to remove file %s: %s", path, err)
-			}
+		_, err := worktree.Remove(path)
+		if err != nil {
+			diag.Errorf("failed to remove file %s: %s", path, err)
 		}
-
 	}
 
 	// Check if worktree is clean

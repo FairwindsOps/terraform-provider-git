@@ -145,6 +145,19 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 		return diag.Errorf("failed to checkout hash %s: %s", sha.String(), err)
 	}
 
+	// Remove files
+	for _, item := range removeItems {
+		path := item.(map[string]interface{})["path"].(string)
+
+		path = worktree.Filesystem.Join(path)
+
+		// Remove the file
+		_, err := worktree.Remove(path)
+		if err != nil {
+			diag.Errorf("failed to remove file %s: %s", path, err)
+		}
+	}
+
 	// Write files
 	for _, item := range addItems {
 		path := item.(map[string]interface{})["path"].(string)
@@ -166,19 +179,6 @@ func resourceCommitCreate(ctx context.Context, d *schema.ResourceData, meta inte
 		err = file.Close()
 		if err != nil {
 			return diag.Errorf("failed to close file %s: %s", path, err)
-		}
-	}
-
-	// Remove files
-	for _, item := range removeItems {
-		path := item.(map[string]interface{})["path"].(string)
-
-		path = worktree.Filesystem.Join(path)
-
-		// Remove the file
-		_, err := worktree.Remove(path)
-		if err != nil {
-			diag.Errorf("failed to remove file %s: %s", path, err)
 		}
 	}
 
@@ -252,6 +252,7 @@ func resourceCommitRead(ctx context.Context, d *schema.ResourceData, meta interf
 	url := d.Get("url").(string)
 	branch := d.Get("branch").(string)
 	items := d.Get("add").([]interface{})
+	removeItems := d.Get("remove").([]interface{})
 
 	auth := meta.(*http.BasicAuth)
 
@@ -284,6 +285,19 @@ func resourceCommitRead(ctx context.Context, d *schema.ResourceData, meta interf
 	})
 	if err != nil {
 		return diag.Errorf("failed to checkout hash %s: %s", sha.String(), err)
+	}
+
+	// Remove files
+	for _, item := range removeItems {
+		path := item.(map[string]interface{})["path"].(string)
+
+		path = worktree.Filesystem.Join(path)
+
+		// Remove the file
+		_, err := worktree.Remove(path)
+		if err != nil {
+			diag.Errorf("failed to remove file %s: %s", path, err)
+		}
 	}
 
 	// Write files
@@ -337,6 +351,7 @@ func resourceCommitUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 	message := d.Get("message").(string)
 	items := d.Get("add").([]interface{})
 	prune := d.Get("prune").(bool)
+	removeItems := d.Get("remove").([]interface{})
 
 	if updateMessage, ok := d.GetOk("update_message"); ok {
 		message = updateMessage.(string)
@@ -373,6 +388,19 @@ func resourceCommitUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 	})
 	if err != nil {
 		return diag.Errorf("failed to checkout hash %s: %s", sha.String(), err)
+	}
+
+	// Remove files
+	for _, item := range removeItems {
+		path := item.(map[string]interface{})["path"].(string)
+
+		path = worktree.Filesystem.Join(path)
+
+		// Remove the file
+		_, err := worktree.Remove(path)
+		if err != nil {
+			diag.Errorf("failed to remove file %s: %s", path, err)
+		}
 	}
 
 	// Prune files
@@ -487,6 +515,7 @@ func resourceCommitDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	message := d.Get("message").(string)
 	items := d.Get("add").([]interface{})
 	prune := d.Get("prune").(bool)
+	removeItems := d.Get("remove").([]interface{})
 
 	if deleteMessage, ok := d.GetOk("delete_message"); ok {
 		message = deleteMessage.(string)
@@ -524,6 +553,19 @@ func resourceCommitDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	})
 	if err != nil {
 		return diag.Errorf("failed to checkout hash %s: %s", sha.String(), err)
+	}
+
+	// Remove files
+	for _, item := range removeItems {
+		path := item.(map[string]interface{})["path"].(string)
+
+		path = worktree.Filesystem.Join(path)
+
+		// Remove the file
+		_, err := worktree.Remove(path)
+		if err != nil {
+			diag.Errorf("failed to remove file %s: %s", path, err)
+		}
 	}
 
 	// Prune files
